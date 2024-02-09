@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- from google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@800&display=swap" rel="stylesheet">
+    <!-- from google fonts -->
+
+
+    <link rel="stylesheet" href="codemirror-5.65.16/lib/codemirror.css">
+    <link rel="stylesheet" href="codemirror-5.65.16/theme/yeti.css">
+    <link rel="stylesheet" href="codemirror-5.65.16/theme/base16-light.css">
+    <script src="codemirror-5.65.16/lib/codemirror.js"></script>
+    <script src="codemirror-5.65.16/mode/clike/clike.js"></script>
+    <link rel="stylesheet" href="codemirror-5.65.16/theme/dracula.css">
+    <script src="codemirror-5.65.16/mode/ruby/ruby.js"></script>
+    <script src="codemirror-5.65.16/addon/edit/closebrackets.js"></script>
+    <script src="codemirror-5.65.16/mode/python/python.js"></script>
+    <!-- <script src="script.js"></script> -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+
+<body>
+    <style>
+        body {
+            background-color: #10181c;
+        }
+
+        .row {
+            display: flex;
+            margin: 50px;
+        }
+
+        .col-2 {
+            margin-left: 5%;
+            border: 5px solid yellowgreen;
+            padding: 50px;
+            background-color: rgb(40, 38, 46);
+            border-radius: 10px;
+        }
+
+        #dropItems {
+            display: flex;
+            width: 300px;
+            height: 40px;
+            border: 2px solid black;
+            background-color: rgb(168, 200, 255);
+            border-radius: 6px;
+            font-family: 'Mukta', sans-serif;
+            padding: 10px;
+            font-size: 11px;
+            /* font-style:italic; */
+        }
+
+        #inputText {
+            width: 700px;
+            height: 500px;
+            overflow: hidden;
+            resize: none
+        }
+
+        #inputIn {
+            width: 400px;
+            height: 240px;
+            resize: none;
+            border: 3px solid black;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        div.CodeMirror {
+            width: 900px;
+            height: 730px;
+            border: 5px solid black;
+            border-radius: 10px;
+        }
+
+        .output {
+            border: 3px solid black;
+            width: 404px;
+            height: 212px;
+            border-radius: 10px;
+            background-color: wheat;
+        }
+
+        .textInp {
+            color: #b4e2f5;
+        }
+
+        .textOut {
+            color: #b4e2f5;
+        }
+
+        .dropDown-div {
+            background-color: rgb(32, 29, 29);
+            margin-left: 50px;
+            padding: 5px;
+            margin-right: 340px;
+            border: 5px solid yellowgreen;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .bt-run {
+            border: 3px solid gray;
+            width: 100px;
+            height: 40px;
+            border-radius: 5px;
+            font-family: 'Mukta', sans-serif;
+            font-size: large;
+            background-color: antiquewhite;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        /* Adjust margin, padding, and other styles as needed */
+
+        .bt-run:hover {
+            background-color: lightcyan;
+            border-color: solid green;
+        }
+
+        #darkMode-bt {
+            border: 3px solid gray;
+            width: 100px;
+            height: 40px;
+            border-radius: 5px;
+            font-family: 'Mukta', sans-serif;
+            font-size: large;
+            background-color: antiquewhite;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        /* mobile view  */
+        @media(max-width:1400px) {
+            .dropDown-div {
+                display: flex;
+                justify-content: space-between;
+                /* flex-direction: column; */
+                position: absolute;
+                width: 885px;
+            }
+
+            div.CodeMirror {
+                margin-top: 100px;
+            }
+        }
+    </style>
+    <div class="dropDown-div">
+        <select name="dropDown" id="dropItems" onclick="cliked()">
+            <option value="c" id="c" selected>C</option>
+            <option value="cpp" id="cpp">C++</option>
+            <option value="java" id="java">Java</option>
+            <option value="python" id="python">Python</option>
+            <option value="cHash" id="cHash">C#</option>
+            <option value="scala" id="scala">Scala</option>
+        </select>
+        <button id="darkMode-bt" onclick="darkModeLightMode()">Light</button>
+        <div class="button-container" >
+            <form id="codeForm">
+            <button class="bt-run" type="submit">Run</button>
+        </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-1">
+            <textarea type="text" id="inputText"></textarea>
+        </div>
+        <div class="col-2">
+            <h2 class="textInp">Input:</h2>
+            <div class="col-2-1">
+                <textarea type="text" id="inputIn"></textarea>
+            </div>
+            <h2 class="textOut">Output:</h2>
+            <div class="col-2-2">
+                <p class="output"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = cBoil;
+        let editor;
+        let getVal = "world";
+        var btnRun = document.getElementsByClassName("bt-run");
+        
+
+      
+        function cliked() {
+            let dropDown = document.getElementById("dropItems");
+            let selectVal = dropDown.value;
+            if (selectVal == "c") {
+                if (selectVal != getVal) {
+                    cBoil();
+                    getVal = selectVal;
+
+                }
+            }
+            else if (selectVal == "cpp") {
+                if (selectVal != getVal) {
+                    cppBoil();
+                    getVal = selectVal;
+                }
+            }
+            else if (selectVal == "java") {
+                if (selectVal != getVal) {
+                    javaBoil();
+                    getVal = selectVal;
+                }
+            }
+            else if (selectVal == "python") {
+                if (selectVal != getVal) {
+                    pythonBoil();
+                    getVal = selectVal;
+                }
+            }
+            else if (selectVal == "cHash") {
+                if (selectVal != getVal) {
+                    cHashBoil();
+                    getVal = selectVal;
+                }
+            }
+            else if (selectVal == "scala") {
+                if (selectVal != getVal) {
+                    scalaBoil();
+                    getVal = selectVal;
+                }
+            }
+        }
+
+
+
+        function cBoil() {
+            if (!editor) {
+                editor = CodeMirror.fromTextArea(document.getElementById('inputText'), {
+                    mode: 'text/x-csrc',
+                    theme: "dracula",
+                    lineNumbers: true,
+                    autoCloseBrackets: true,
+                });
+            } else {
+                editor.setOption('mode', 'text/x-csrc');
+            }
+            editor.setValue('');
+            editor.setValue(
+                `#include<stdio.h>
+        
+        int main(){
+            printf("Hello World");
+            return 0;
+        }`);
+        }
+
+
+
+        function cppBoil() {
+            if (!editor) {
+                let editor = CodeMirror.fromTextArea(document.getElementById('inputText'), {
+                    mode: 'text/x-c++src',
+                    theme: "dracula",
+                    lineNumbers: true,
+                    autoCloseBrackets: true,
+                });
+            }
+            else {
+                editor.setOption('mode', 'text/x-c++src');
+            }
+            editor.setValue('');
+            editor.setValue(
+                `#include<iostream>
+            
+            int main(){
+                cout<<"Hello World"<<endl;
+                return 0;
+            }`);
+        }
+
+
+
+        function javaBoil() {
+            if (!editor) {
+                editor = CodeMirror.fromTextArea(document.getElementById('inputText'), {
+                    mode: 'text/x-java',
+                    theme: "dracula",
+                    lineNumbers: true,
+                    autoCloseBrackets: true,
+                });
+            } else {
+                editor.setOption('mode', 'text/x-java');
+            }
+            editor.setValue('');
+            editor.setValue(
+                `class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Hello, World!");
+                    }
+                }`);
+        }
+
+
+        function pythonBoil() {
+            if (!editor) {
+                editor = CodeMirror.fromTextArea(document.getElementById('inputText'), {
+                    mode: 'text/x-ruby',
+                    theme: "dracula",
+                    lineNumbers: true,
+                    autoCloseBrackets: true,
+                });
+            } else {
+                editor.setOption('mode', 'text/x-python');
+            }
+            editor.setValue('');
+            editor.setValue(`print('Hello World')`);
+        }
+
+
+        function cHashBoil() {
+            if (!editor) {
+                editor = CodeMirror.fromTextArea(document.getElementById('inputText'), {
+                    mode: 'text/x-csharp',
+                    theme: "dracula",
+                    lineNumbers: true,
+                    autoCloseBrackets: true,
+                });
+            } else {
+                editor.setOption('mode', 'text/x-csharp');
+            }
+            editor.setValue('');
+            editor.setValue(
+                `using System;
+                    
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+        Console.WriteLine("Hello World!");
+    }
+}`);
+        }
+
+
+        function scalaBoil() {
+            if (!editor) {
+                editor = CodeMirror.fromTextArea(document.getElementById('inputText'), {
+                    mode: 'text/x-scala',
+                    theme: "dracula",
+                    lineNumbers: true,
+                    autoCloseBrackets: true,
+                });
+            } else {
+                editor.setOption('mode', 'text/x-scala');
+            }
+            editor.setValue('');
+            editor.setValue(
+                `object MyObject {
+    def main(args: Array[String]): Unit = {
+        println("Hello, World!")
+    }
+}`);
+        }
+
+        var count = 1;
+        let bodyColor;
+
+        function darkModeLightMode() {
+            if (count % 2 != 0) {
+                bodyColor = document.body.style.backgroundColor = "#f5f5f5";
+                editor.setOption('theme', 'yeti');
+                let nameOfButton = document.getElementById("darkMode-bt");
+                nameOfButton.innerHTML = "Dark";
+                document.querySelector(".dropDown-div").style.backgroundColor = '#e5e1db'
+                document.querySelector(".col-2").style.backgroundColor = "#e5e1db";
+                document.querySelector(".textInp").style.color = "black";
+                document.querySelector(".textOut").style.color = "black";
+                // console.log(1);]
+            }
+            else {
+                bodyColor = document.body.style.backgroundColor = "#10181c";
+                editor.setOption('theme', 'dracula');
+                let nameOfButton = document.getElementById("darkMode-bt");
+                nameOfButton.innerHTML = "Light";
+                document.querySelector(".dropDown-div").style.backgroundColor = '#28262e'
+                document.querySelector(".col-2").style.backgroundColor = "#28262e";
+                document.querySelector(".textInp").style.color = "#b4e2f5";
+                document.querySelector(".textOut").style.color = "#b4e2f5";
+            }
+            count++;
+        }
+
+        var input = document.getElementById("inputIn");
+       var output = document.querySelector(".output");
+       output.style.padding="10px";
+
+// Iterate over each element with the class "bt-run" and attach the event listener
+// Iterate over each element with the class "bt-run" and attach the event listener
+// for (let i = 0; i < btnRun.length; i++) {
+//     btnRun[i].addEventListener("click", async function (event) {
+//         event.preventDefault(); // Prevent default form submission behavior
+
+//         console.log("ho");
+
+//         let selectVal = document.getElementById("dropItems").value; // Fetch selectVal here
+//         let code = {
+//             code: editor.getValue(),
+//             input: input.value,
+//             lang: selectVal,
+//         };
+
+//         try {
+//             let response = await fetch("http://localhost:1800/compile", {
+//                 method: "POST",
+//                 headers: {
+//                     "Content-Type": "application/json",
+//                 },
+//                 body: JSON.stringify(code),
+//             });
+            
+//             let data = await response.json();
+
+//             console.log(data.output);
+//             output.innerHTML = JSON.stringify(data.output.output);
+//             console.log("run button clicked");
+//         } catch (error) {
+//             console.error("Error:", error);
+//         }
+//     });
+// }
+
+
+document.getElementById("codeForm").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    console.log("ho");
+
+    let selectVal = document.getElementById("dropItems").value; // Fetch selectVal here
+    let code = {
+        code: editor.getValue(),
+        input: input.value,
+        lang: selectVal,
+    };
+
+    try {
+        let response = await fetch("http://localhost:1800/compile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(code),
+        });
+        
+        let data = await response.json();
+
+        console.log(data.output);
+        output.innerHTML = (data.output.output);
+        console.log("run button clicked");
+    } catch (error) {
+        console.error("Error:", error);
+    }
+});
+
+
+
+    </script>
+</body>
+
+</html>

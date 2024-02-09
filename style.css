@@ -1,0 +1,121 @@
+body{
+    background-color: #10181c;
+}
+.row{
+    display: flex;
+    margin: 50px;
+}
+.col-2{
+    margin-left: 5%;
+    border: 5px solid yellowgreen;
+    padding: 50px;
+    background-color: rgb(40, 38, 46);
+    border-radius: 10px;
+}
+#dropItems {
+    display: flex;
+    width: 300px;
+    height: 40px;
+    border: 2px solid black;
+    background-color:rgb(168,200,255);
+    border-radius: 6px;
+    font-family: 'Mukta', sans-serif;
+    padding: 10px;
+    font-size: 11px;
+    /* font-style:italic; */
+}
+
+#inputText {
+    width: 700px;
+    height: 500px;
+    overflow: hidden;
+    resize: none
+}
+#inputIn {
+    width: 400px;
+    height: 240px;
+    resize: none;
+    border: 3px solid black;
+    border-radius: 5px;
+    cursor:pointer;
+}
+div.CodeMirror{
+    width: 900px;
+    height: 730px;
+    border: 5px solid black;
+    border-radius: 10px;
+}
+.output{
+    border: 3px solid black;
+    width: 404px;
+    height: 212px;
+    border-radius: 10px;
+    background-color: wheat;
+}
+.textInp{
+    color: #b4e2f5;
+}
+.textOut{
+    color: #b4e2f5;
+}
+
+.dropDown-div {
+background-color: rgb(32, 29, 29);
+margin-left: 50px;
+padding: 5px;
+margin-right: 340px;
+border: 5px solid yellowgreen;
+border-radius: 5px;
+display: flex;
+justify-content: space-between;
+}       
+
+.button-container {
+    display: flex;
+    align-items: center;
+}
+
+.bt-run {
+border: 3px solid gray;
+width: 100px;
+height: 40px;
+border-radius: 5px;
+font-family: 'Mukta', sans-serif;
+font-size: large;
+background-color: antiquewhite;
+cursor: pointer;
+transition: background-color 0.2s ease-in-out;
+}
+
+/* Adjust margin, padding, and other styles as needed */
+
+.bt-run:hover {
+background-color: lightcyan;
+border-color: solid green;
+}
+
+#darkMode-bt{
+border: 3px solid gray;
+width: 100px;
+height: 40px;
+border-radius: 5px;
+font-family: 'Mukta', sans-serif;
+font-size: large;
+background-color: antiquewhite;
+cursor: pointer;
+transition: background-color 0.2s ease-in-out;
+}
+
+/* mobile view  */
+@media(max-width:1400px){
+    .dropDown-div{
+        display: flex;
+        justify-content: space-between;
+        /* flex-direction: column; */
+        position: absolute;
+        width: 885px;
+    }
+    div.CodeMirror{
+        margin-top: 100px;
+    }
+}
